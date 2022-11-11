@@ -1150,6 +1150,10 @@ return array (
     'defaultLeadStatus' => 'Default Lead Status',
     'iframeSnippet' => 'Iframe Code Snippet',
     'convertedLead' => 'Converted Leads',
+    'consideration' => 'Consideration',
+    'evaluation' => 'Evaluation',
+    'closure' => 'Closure',
+    'others' => 'Others'
   ),
   'credit-notes' => 
   array (

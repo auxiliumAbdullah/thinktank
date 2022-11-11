@@ -11,97 +11,103 @@ $memberIds = $project->members->pluck('user_id')->toArray();
 
 <div class="d-lg-flex">
     <div class="project-left w-100 py-0 py-lg-5 py-md-0 ">
-        <div class="d-flex align-content-center flex-lg-row-reverse mb-4">
-            @if (!$project->trashed())
-                <div class="ml-lg-3 ml-md-0 ml-0 mr-3 mr-lg-0 mr-md-3">
-                    @if ($editProjectPermission == 'all' || ($editProjectPermission == 'added' && $project->added_by == user()->id) || ($project->project_admin == user()->id))
-                        <select class="form-control select-picker change-status height-35">
-                            @foreach ($projectStatus as $status)
-                                <option
-                                data-content="<i class='fa fa-circle mr-1 f-15' style='color:{{$status->color}}'></i>{{ ucfirst($status->status_name) }}"
-                                @if ($project->status == $status->status_name)
-                                selected @endif
-                                value="{{$status->status_name}}">$status->status_name
-                                </option>
-                            @endforeach
-                        </select>
-                    @else
-                        <div class="bg-white p-2 border rounded">
-                            @if ($project->status == 'in progress') <i
-                                    class='fa fa-circle mr-2 text-blue'></i> {{ __('app.inProgress') }}
-                            @elseif ($project->status == 'on hold') <i class='fa fa-circle mr-2 text-warning'></i>
-                                {{ __('app.onHold') }}
+        <div class="d-flex mb-4 justify-content-between">
+                <a href="/account/zoom-meetings/create" class="btn-primary rounded f-14 p-2 mr-3 openRightModal float-left">
+                    <svg class="svg-inline--fa fa-plus fa-w-14 mr-1" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></svg>Add New Meeting
+                </a>
+            <div class="d-flex justify-content-end">
+                @if (!$project->trashed())
+                    <div class="ml-lg-3 ml-md-0 ml-0 mr-3 mr-lg-0 mr-md-3">
+                        @if ($editProjectPermission == 'all' || ($editProjectPermission == 'added' && $project->added_by == user()->id) || ($project->project_admin == user()->id))
+                            <select class="form-control select-picker change-status height-35">
+                                @foreach ($projectStatus as $status)
+                                    <option
+                                    data-content="<i class='fa fa-circle mr-1 f-15' style='color:{{$status->color}}'></i>{{ ucfirst($status->status_name) }}"
+                                    @if ($project->status == $status->status_name)
+                                    selected @endif
+                                    value="{{$status->status_name}}">$status->status_name
+                                    </option>
+                                @endforeach
+                            </select>
+                        @else
+                            <div class="bg-white p-2 border rounded">
+                                @if ($project->status == 'in progress') <i
+                                        class='fa fa-circle mr-2 text-blue'></i> {{ __('app.inProgress') }}
+                                @elseif ($project->status == 'on hold') <i class='fa fa-circle mr-2 text-warning'></i>
+                                    {{ __('app.onHold') }}
 
-                            @elseif ($project->status == 'not started') <i
-                                    class='fa fa-circle mr-2 text-warning'></i>
-                                {{ __('app.notStarted') }}
-                            @elseif ($project->status == 'canceled') <i class='fa fa-circle mr-2 text-red'></i>
-                                {{ __('app.canceled') }}
-                            @elseif ($project->status == 'finished') <i
-                                    class='fa fa-circle mr-2 text-dark-green'></i>
-                                {{ __('app.finished') }}
-                            @endif
+                                @elseif ($project->status == 'not started') <i
+                                        class='fa fa-circle mr-2 text-warning'></i>
+                                    {{ __('app.notStarted') }}
+                                @elseif ($project->status == 'canceled') <i class='fa fa-circle mr-2 text-red'></i>
+                                    {{ __('app.canceled') }}
+                                @elseif ($project->status == 'finished') <i
+                                        class='fa fa-circle mr-2 text-dark-green'></i>
+                                    {{ __('app.finished') }}
+                                @endif
+                            </div>
+                        @endif
+
+                    </div>
+
+                    <div class="ml-lg-3 ml-md-0 ml-0 mr-3 mr-lg-0 mr-md-3">
+                        <div class="dropdown">
+                            <button
+                                class="btn btn-lg bg-white border height-35 f-15 px-2 py-1 text-dark-grey text-capitalize rounded  dropdown-toggle"
+                                type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                @lang('app.action') <i class="icon-options-vertical icons"></i>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
+                                aria-labelledby="dropdownMenuLink" tabindex="0">
+
+                                @if ($editProjectPermission == 'all'
+                                    || ($project->project_admin == user()->id)
+                                    || ($editProjectPermission == 'added' && user()->id == $project->added_by)
+                                    || ($editProjectPermission == 'owned' && user()->id == $project->client_id && in_array('client', user_roles()))
+                                    || ($editProjectPermission == 'owned' && in_array(user()->id, $memberIds) && in_array('employee', user_roles()))
+                                    || ($editProjectPermission == 'both' && (user()->id == $project->client_id || user()->id == $project->added_by))
+                                    || ($editProjectPermission == 'both' && in_array(user()->id, $memberIds) && in_array('employee', user_roles())))
+                                    <a class="dropdown-item openRightModal"
+                                        href="{{ route('projects.edit', $project->id) }}">@lang('app.edit')
+                                        @lang('app.project')</a>
+                                    <hr class="my-1">
+                                @endif
+
+                                @php $projectPin = $project->pinned() @endphp
+
+                                @if ($projectPin)
+                                    <a class="dropdown-item" href="javascript:;" id="pinnedItem"
+                                        data-pinned="pinned">@lang('app.unpin')
+                                        @lang('app.project')</a>
+                                @else
+                                    <a class="dropdown-item" href="javascript:;" id="pinnedItem"
+                                        data-pinned="unpinned">@lang('app.pin')
+                                        @lang('app.project')</a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    @if ($projectPin)
+                        <div class="align-self-center">
+                            <span class='badge badge-success'><i class='fa fa-thumbtack'></i> @lang('app.pinned')</span>
                         </div>
                     @endif
-
-                </div>
-
-                <div class="ml-lg-3 ml-md-0 ml-0 mr-3 mr-lg-0 mr-md-3">
-                    <div class="dropdown">
-                        <button
-                            class="btn btn-lg bg-white border height-35 f-15 px-2 py-1 text-dark-grey text-capitalize rounded  dropdown-toggle"
-                            type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            @lang('app.action') <i class="icon-options-vertical icons"></i>
-                        </button>
-
-                        <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
-                            aria-labelledby="dropdownMenuLink" tabindex="0">
-
-                            @if ($editProjectPermission == 'all'
-                                || ($project->project_admin == user()->id)
-                                || ($editProjectPermission == 'added' && user()->id == $project->added_by)
-                                || ($editProjectPermission == 'owned' && user()->id == $project->client_id && in_array('client', user_roles()))
-                                || ($editProjectPermission == 'owned' && in_array(user()->id, $memberIds) && in_array('employee', user_roles()))
-                                || ($editProjectPermission == 'both' && (user()->id == $project->client_id || user()->id == $project->added_by))
-                                || ($editProjectPermission == 'both' && in_array(user()->id, $memberIds) && in_array('employee', user_roles())))
-                                <a class="dropdown-item openRightModal"
-                                    href="{{ route('projects.edit', $project->id) }}">@lang('app.edit')
-                                    @lang('app.project')</a>
-                                <hr class="my-1">
-                            @endif
-
-                            @php $projectPin = $project->pinned() @endphp
-
-                            @if ($projectPin)
-                                <a class="dropdown-item" href="javascript:;" id="pinnedItem"
-                                    data-pinned="pinned">@lang('app.unpin')
-                                    @lang('app.project')</a>
-                            @else
-                                <a class="dropdown-item" href="javascript:;" id="pinnedItem"
-                                    data-pinned="unpinned">@lang('app.pin')
-                                    @lang('app.project')</a>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                @if ($projectPin)
-                    <div class="align-self-center">
-                        <span class='badge badge-success'><i class='fa fa-thumbtack'></i> @lang('app.pinned')</span>
+                @elseif($editProjectPermission == 'all'
+                || ($project->project_admin == user()->id)
+                || ($editProjectPermission == 'added' && user()->id == $project->added_by)
+                || ($editProjectPermission == 'owned' && user()->id == $project->client_id && in_array('client', user_roles()))
+                || ($editProjectPermission == 'owned' && in_array(user()->id, $memberIds) && in_array('employee', user_roles()))
+                || ($editProjectPermission == 'both' && (user()->id == $project->client_id || user()->id == $project->added_by))
+                || ($editProjectPermission == 'both' && in_array(user()->id, $memberIds) && in_array('employee', user_roles())))
+                    <div class="ml-3">
+                        <x-forms.button-primary class="restore-project" icon="undo">@lang('app.unarchive')
+                        </x-forms.button-primary>
                     </div>
                 @endif
-            @elseif($editProjectPermission == 'all'
-            || ($project->project_admin == user()->id)
-            || ($editProjectPermission == 'added' && user()->id == $project->added_by)
-            || ($editProjectPermission == 'owned' && user()->id == $project->client_id && in_array('client', user_roles()))
-            || ($editProjectPermission == 'owned' && in_array(user()->id, $memberIds) && in_array('employee', user_roles()))
-            || ($editProjectPermission == 'both' && (user()->id == $project->client_id || user()->id == $project->added_by))
-            || ($editProjectPermission == 'both' && in_array(user()->id, $memberIds) && in_array('employee', user_roles())))
-                <div class="ml-3">
-                    <x-forms.button-primary class="restore-project" icon="undo">@lang('app.unarchive')
-                    </x-forms.button-primary>
-                </div>
-            @endif
+            </div>
+            
         </div>
         <!-- PROJECT PROGRESS AND CLIENT START -->
         <div class="row">

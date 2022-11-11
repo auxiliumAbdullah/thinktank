@@ -23,8 +23,18 @@
                             <x-forms.text fieldLabel="Start Time" :fieldPlaceholder="__('placeholders.hours')" fieldName="start_time" fieldId="start_time" fieldRequired="true" :fieldValue="$follow->next_follow_up_date->format(global_setting()->time_format)"/>
                         </div>
                     </div>
+                    
+                    <div class="col-lg-6 my-3">
+                        <label class="f-14 text-dark-grey mb-12" data-label="true" for="followup_type">Follow Up Type</label>
+                        <x-forms.select fieldId="followup_type" fieldLabel="" fieldName="followup_type" search="true">    
+                            <option value="1" @if ($follow->followup_type == '1') selected @endif>@lang('modules.lead.consideration')</option>
+                            <option value="2" @if ($follow->followup_type == '2') selected @endif>@lang('modules.lead.evaluation')</option>
+                            <option value="3" @if ($follow->followup_type == '3') selected @endif>@lang('modules.lead.closure')</option>
+                            <option value="4" @if ($follow->followup_type == '4') selected @endif>@lang('modules.lead.others')</option>
+                        </x-forms.select>
+                    </div>
 
-                     <div class="col-lg-12 mb-2">
+                    <div class="col-lg-12 mb-2">
                         <x-forms.checkbox :fieldLabel="__('modules.tasks.reminder')" fieldName="send_reminder"
                             fieldId="send_reminder" fieldValue="yes" fieldRequired="true"
                             :checked="$follow->send_reminder == 'yes'" />

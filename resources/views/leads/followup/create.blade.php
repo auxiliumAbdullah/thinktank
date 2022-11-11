@@ -26,6 +26,15 @@
                                 :fieldValue="\Carbon\Carbon::now(global_setting()->timezone)->format(global_setting()->time_format)" />
                         </div>
                     </div>
+                    <div class="col-lg-6 my-3">
+                        <label class="f-14 text-dark-grey mb-12" data-label="true" for="followup_type">Follow Up Type</label>
+                        <x-forms.select fieldId="followup_type" fieldLabel="" fieldName="followup_type" search="true">    
+                            <option value="1">@lang('modules.lead.consideration')</option>
+                            <option value="2">@lang('modules.lead.evaluation')</option>
+                            <option value="3">@lang('modules.lead.closure')</option>
+                            <option value="4">@lang('modules.lead.others')</option>
+                        </x-forms.select>
+                    </div>
                     <div class="col-lg-12 my-3">
                         <x-forms.checkbox :fieldLabel="__('modules.tasks.reminder')" fieldName="send_reminder"
                             fieldId="send_reminder" fieldValue="yes" fieldRequired="true" />

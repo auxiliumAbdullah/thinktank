@@ -466,6 +466,7 @@ class LeadController extends AccountBaseController
 
         $this->leadID = $leadID;
         $this->lead = Lead::findOrFail($leadID);
+
         return view('leads.followup.create', $this->data);
 
     }
@@ -497,6 +498,8 @@ class LeadController extends AccountBaseController
         $followUp->send_reminder = $request->send_reminder;
         $followUp->remind_time = $request->remind_time;
         $followUp->remind_type = $request->remind_type;
+        $followUp->followup_type = $request->followup_type;
+
 
         $followUp->save();
 
@@ -537,6 +540,7 @@ class LeadController extends AccountBaseController
         $followUp->send_reminder = $request->send_reminder;
         $followUp->remind_time = $request->remind_time;
         $followUp->remind_type = $request->remind_type;
+        $followUp->followup_type = $request->followup_type;
 
         $followUp->save();
 
